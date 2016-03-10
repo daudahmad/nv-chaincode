@@ -30,6 +30,7 @@ import (
 const   BANKA = "BANKA"
 const   BANKB = "BANKB"
 const   BANKC = "BANKC"
+const 	AUDITOR = "AUDITOR"
 
 const AUDUSD = 0.74
 const USDAUD = 1.34
@@ -184,15 +185,15 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 // ============================================================================================================================
 func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 
-	if len(args) != 1 { return nil, errors.New("Incorrect number of arguments passed") }
+	if len(args) != 2 { return nil, errors.New("Incorrect number of arguments passed") }
 
-	if function != "getFIDetails" && function != "getTxs" && function != "getNVAccounts"{
+	if args[0] != "getFIDetails" && args[0] != "getTxs" && args[0] != "getNVAccounts"{
 		return nil, errors.New("Invalid query function name.")
 	}
 
-	if function == "getFIDetails" { return t.getFinInstDetails(stub, args[0]) }
-	if function == "getNVAccounts" { return t.getNVAccounts(stub, args[0]) }
-	if function == "getTxs" { return t.getTxs(stub, args[0]) }
+	if args[0] == "getFIDetails" { return t.getFinInstDetails(stub, args[1]) }
+	if args[0] == "getNVAccounts" { return t.getNVAccounts(stub, args[1]) }
+	if args[0] == "getTxs" { return t.getTxs(stub, args[1]) }
 
 	return nil, nil										
 }
@@ -289,6 +290,10 @@ func (t *SimpleChaincode) getTxs(stub *shim.ChaincodeStub, finInst string)([]byt
 		if txs.Transactions[i].Receiver == finInst{
 			res.Transactions = append(res.Transactions, txs.Transactions[i])
 		}
+
+		if(finInst == AUDITOR) {
+			res.Transactions = append(res.Transactions, txs.Transactions[i])
+		}
 	}
 
 	resAsBytes, _ := json.Marshal(res)
@@ -296,6 +301,7 @@ func (t *SimpleChaincode) getTxs(stub *shim.ChaincodeStub, finInst string)([]byt
 	return resAsBytes, nil
 	
 }
+
 
 
 // ============================================================================================================================
