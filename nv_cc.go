@@ -81,7 +81,7 @@ type NVAccounts struct {
 // ============================================================================================================================
 // Init 
 // ============================================================================================================================
-func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) init(stub *shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	var err error
 
@@ -166,7 +166,7 @@ func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte,
 // ============================================================================================================================
 // Run - Our entry point
 // ============================================================================================================================
-func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Run(stub *shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("run is running " + function)
 
 	// Handle different functions
@@ -183,7 +183,7 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 // ============================================================================================================================
 // Query - read a variable from chaincode state - (aka read)
 // ============================================================================================================================
-func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Query(stub *shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
 	if len(args) != 2 { return nil, errors.New("Incorrect number of arguments passed") }
 
@@ -202,7 +202,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 // ============================================================================================================================
 // Get Financial Institution Details
 // ============================================================================================================================
-func (t *SimpleChaincode) getFinInstDetails(stub *shim.ChaincodeStub, finInst string)([]byte, error){
+func (t *SimpleChaincode) getFinInstDetails(stub *shim.ChaincodeStubInterface, finInst string)([]byte, error){
 	
 	fmt.Println("Start find getFinInstDetails")
 	fmt.Println("Looking for " + finInst);
@@ -220,7 +220,7 @@ func (t *SimpleChaincode) getFinInstDetails(stub *shim.ChaincodeStub, finInst st
 // ============================================================================================================================
 // Get Nostro/Vostro accounts for a specific Financial Institution
 // ============================================================================================================================
-func (t *SimpleChaincode) getNVAccounts(stub *shim.ChaincodeStub, finInst string)([]byte, error){
+func (t *SimpleChaincode) getNVAccounts(stub *shim.ChaincodeStubInterface, finInst string)([]byte, error){
 	
 	fmt.Println("Start find getNVAccounts")
 	fmt.Println("Looking for " + finInst);
@@ -265,7 +265,7 @@ func (t *SimpleChaincode) getNVAccounts(stub *shim.ChaincodeStub, finInst string
 // ============================================================================================================================
 // Get Transactions for a specific Financial Institution (Inbound and Outbound)
 // ============================================================================================================================
-func (t *SimpleChaincode) getTxs(stub *shim.ChaincodeStub, finInst string)([]byte, error){
+func (t *SimpleChaincode) getTxs(stub *shim.ChaincodeStubInterface, finInst string)([]byte, error){
 	
 	var res AllTransactions
 
@@ -317,7 +317,7 @@ func (t *SimpleChaincode) getTxs(stub *shim.ChaincodeStub, finInst string)([]byt
 	// BenefCust	string   `json:"benefcust"`
 	// DetCharges  string   `json:"detcharges"`
 // ============================================================================================================================
-func (t *SimpleChaincode) submitTx(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) submitTx(stub *shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	var err error
 	fmt.Println("Running submitTx")
@@ -452,7 +452,7 @@ func (t *SimpleChaincode) submitTx(stub *shim.ChaincodeStub, args []string) ([]b
 	return nil, nil
 }
 
-func (t *SimpleChaincode) creditVostroAccount(stub *shim.ChaincodeStub, sender string, receiver string, amount float64) ([]byte, error) {
+func (t *SimpleChaincode) creditVostroAccount(stub *shim.ChaincodeStubInterface, sender string, receiver string, amount float64) ([]byte, error) {
 
 	senderBytes, err := stub.GetState(sender)
 	if err != nil {
@@ -481,7 +481,7 @@ func (t *SimpleChaincode) creditVostroAccount(stub *shim.ChaincodeStub, sender s
 
 }
 
-func (t *SimpleChaincode) debitNostroAccount(stub *shim.ChaincodeStub, sender string, receiver string, amount float64) ([]byte, error) {
+func (t *SimpleChaincode) debitNostroAccount(stub *shim.ChaincodeStubInterface, sender string, receiver string, amount float64) ([]byte, error) {
 
 	receiverBytes, err := stub.GetState(receiver)
 	if err != nil {
